@@ -715,9 +715,13 @@ loadNamespace <- function (package, lib.loc = NULL,
         }
         ## certain things should never be exported.
         if (length(exports)) {
+            callroutinelist <- unlist(lapply(env, function(obj)
+                if ("CallRoutine" %in% class(obj)) return(obj$name)
+            ), use.names = FALSE)
             stoplist <- c(".__NAMESPACE__.", ".__S3MethodsTable__.",
                           ".packageName", ".First.lib", ".onLoad",
-                          ".onAttach", ".conflicts.OK", ".noGenerics")
+                          ".onAttach", ".conflicts.OK", ".noGenerics",
+                          callroutinelist)
             exports <- exports[! exports %in% stoplist]
         }
         namespaceExport(ns, exports)
